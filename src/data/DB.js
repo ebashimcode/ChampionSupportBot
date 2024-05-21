@@ -1,35 +1,44 @@
-const sqlite3 = require('sqlite3');
-const { open } = require('sqlite');
+const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
 
-class DatabaseInterface {
-  constructor() {
-    this.initializeDatabase();
-  }
+const dbPath = path.resolve(__dirname, 'users.db');
+const db = new sqlite3.Database(dbPath);
 
-  async initializeDatabase() {
-    try {
-      this.db = await open({
-        filename: 'src/database.db',
-        driver: sqlite3.Database,
-      });
+db.serialize(() => {
+  db.run(`
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT,
+      userid INTEGER
+    )
+  `);
+});
 
-      await this.db.run(`CREATE TABLE IF NOT EXISTS Users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username VARCHAR(33),
-        userId INTEGER UNIQUE
-      );`);
-    } catch (error) {
-      console.error('Error initializing database:', error);
-    }
-  }
-
-  async performQuery(query, params) {
-    try {
-      return await this.db.run(query, params);
-    } catch (error) {
-      console.error('Error performing query:', error);
-    }
-  }
+function addUser(username, userid) {
+  return new Promise((resolve, reject) => {
+    const query = `INSERT INTO users (username, userid) VALUES (?, ?)`;
+    db.run(query, [username, userid], function (err) {
+      if (err) {
+        return reject(err);
+      }
+      resolve({ id: this.lastID });
+    });
+  });
 }
 
-module.exports = new DatabaseInterface();
+function userExists(userid) {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT COUNT(*) as count FROM users WHERE userid = ?`;
+    db.get(query, [userid], (err, row) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(row.count > 0);
+    });
+  });
+}
+
+module.exports = {
+  addUser,
+  userExists
+};
