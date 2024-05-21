@@ -1,2 +1,9 @@
 # ChampionSupportBot
-Support bot
+
+Telegram-бот поддержки.
+
+
+### Структура проекта
+
+- `data`
+- `handlers`
