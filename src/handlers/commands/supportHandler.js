@@ -19,7 +19,7 @@ module.exports = function supportHandler(bot) {
 
       // Отправляем сообщение операторам
       for (const operatorId of codeOperators) {
-        await ctx.telegram.sendMessage(operatorId, `Сообщение от ${username} (ID: ${userId}):\n\n${userMessage}\n\n#id${userId}`);
+        await ctx.telegram.sendMessage(operatorId, `Сообщение от ${username}:\n\n${userMessage}\n\n#id${userId}`);
       }
 
       ctx.reply('Ваше сообщение отправлено операторам. Ожидайте ответа.');

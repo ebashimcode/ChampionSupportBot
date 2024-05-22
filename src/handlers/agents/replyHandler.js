@@ -1,6 +1,11 @@
 const { codeOperators } = require('../../const');
 
 module.exports = async function replyHandler(ctx, next) {
+  if (codeOperators.indexOf(ctx.from.id) === -1) {
+    next();
+    return;
+  }
+
   const repliedMessage = ctx.message.reply_to_message;
 
   if (!repliedMessage) {
