@@ -1,4 +1,3 @@
-const { Markup } = require('telegraf');
 const { codeOperators } = require('../../const');
 const { addUser, userExists } = require('../../data/DB');
 
@@ -17,13 +16,13 @@ module.exports = function supportHandler(bot) {
         await addUser(username, userId);
       }
 
-      // Отправляем сообщение операторам
+
       for (const operatorId of codeOperators) {
-        await ctx.telegram.sendMessage(operatorId, `Сообщение от ${username}:\n\n${userMessage}\n\n#id${userId}`);
+        await ctx.telegram.sendMessage(operatorId, `Обращение по категории: ${ctx.session.supportCategory}\n\nСообщение от ${username}:\n\n${userMessage}\n\n#id${userId}`);
       }
 
-      ctx.reply('Ваше сообщение отправлено операторам. Ожидайте ответа.');
-      ctx.session.supportMode = false; // Выходим из режима поддержки после отправки сообщения
+      ctx.reply('Оператор скоро с вами свяжется, ожидайте.');
+      ctx.session.supportMode = false;
     }
   });
 
@@ -32,7 +31,7 @@ module.exports = function supportHandler(bot) {
       '✉️ Напишите своё сообщение для технической поддержки.',
       Markup.keyboard([Markup.button.callback('Отмена', 'staffDeny')]).oneTime()
     );
-    ctx.session.supportMode = true; // Устанавливаем флаг режима поддержки
+    ctx.session.supportMode = true;
   };
 };
 
