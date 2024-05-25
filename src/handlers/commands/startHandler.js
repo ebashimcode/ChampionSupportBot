@@ -1,7 +1,6 @@
 const { Markup } = require('telegraf');
 const scenes = require('../scenes/scenes');
 const { botMenu } = require('../../const');
-const { depositProblems } = require('../../data/faqAnswers');
 
 module.exports = (bot) => {
   bot.start((ctx) => {
@@ -14,23 +13,32 @@ module.exports = (bot) => {
   });
 
   bot.hears('Ввод средств 💸', (ctx) => {
-    ctx.reply('Ответы на вопросы, связанные с депозитом средств.', Markup.inlineKeyboard(depositProblems));
+    ctx.reply('Оператор скоро с вами свяжется, ожидайте.');
+    ctx.session.supportCategory = 'Ввод средств 💸';
+    ctx.scene.enter(scenes.userAdminChat);
   });
 
   bot.hears('Вывод средств 💸', (ctx) => {
-    ctx.reply('Ответы на вопросы, связанные с выводом средств.', Markup.inlineKeyboard(depositProblems));
+    ctx.reply('Оператор скоро с вами свяжется, ожидайте.');
+    ctx.session.supportCategory = 'Вывод средств 💸';
+    ctx.scene.enter(scenes.userAdminChat);
   });
 
   bot.hears('Проблемы с игрой 🎰', (ctx) => {
-    ctx.reply('Ответы на вопросы, связанные с игрой в казино.', Markup.inlineKeyboard(depositProblems));
+    ctx.reply('Оператор скоро с вами свяжется, ожидайте.');
+    ctx.session.supportCategory = 'Проблемы с игрой 🎰';
+    ctx.scene.enter(scenes.userAdminChat);
   });
 
   bot.hears('Сотрудничество 👥', (ctx) => {
-    ctx.reply('Распишите ваши идеи, оператор с вами свяжется.');
+    ctx.reply('Оператор скоро с вами свяжется, ожидайте.');
+    ctx.session.supportCategory = 'Сотрудничество 👥';
     ctx.scene.enter(scenes.userAdminChat);
   });
 
   bot.hears('Написать оператору 📞', (ctx) => {
+    ctx.reply('Оператор скоро с вами свяжется, ожидайте.');
+    ctx.session.supportCategory = 'Написать оператору 📞';
     ctx.scene.enter(scenes.userAdminChat);
   });
 };
