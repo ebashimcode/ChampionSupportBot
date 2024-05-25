@@ -1,45 +1,33 @@
-const { Scenes, Markup } = require('telegraf');
-const scenes = require('./scenes');
-const { codeOperators, botMenu } = require('../../const');
+const { Scenes } = require('telegraf');
+const { codeOperators } = require('../../const');
 
-const userAdminChatScene = new Scenes.BaseScene(scenes.userAdminChat);
+const userAdminChatScene = new Scenes.BaseScene('USER_ADMIN_CHAT_SCENE');
 
-userAdminChatScene.enter(enterStep);
-userAdminChatScene.hears(/\/quit/, endScene);
-userAdminChatScene.hears(/.*/, forwardMessageToAdmin);
-
-module.exports = userAdminChatScene;
-
-async function enterStep(ctx) {
+userAdminChatScene.enter(async (ctx) => {
   await ctx.reply(
-    `Вы вошли в чат с оператором.
-
-Вы должны будете перевести сумму депозита на указанные оператором реквизиты, затем вы получите код для входа в игру.
-
-Чтобы закончить чат впишите команду /quit`,
+    '✉️ Напишите своё сообщение для технической поддержки.\nДля выхода из чата введите /quit'
   );
-}
+});
 
-async function forwardMessageToAdmin(ctx) {
+userAdminChatScene.hears(/\/quit/, async (ctx) => {
+  await ctx.reply(
+    'Здравствуйте! Вы обратились в тех.поддержку проекта Champion Casino.\nПо какому вопросу вы обращаетесь?',
+    Markup.keyboard(botMenu).resize().oneTime()
+  );
+  ctx.scene.leave();
+});
+
+userAdminChatScene.on('message', async (ctx) => {
   const userId = ctx.from.id;
+  const username = ctx.from.username || `User ${userId}`;
   const message = ctx.message.text;
 
-  // Отправляем сообщение операторам
   for (const operatorId of codeOperators) {
-    const username = ctx.from.username || `User ${userId}`;
-
     await ctx.telegram.sendMessage(
       operatorId,
-      `Сообщение от ${username}:\n\n${message}\n\nОтветьте на это сообщение текстом которое хотите переслать пользователю\n\n#id${userId}`,
+      `Обращение по категории: ${ctx.session.supportCategory}\n\nСообщение от ${username}:\n\n${message}\n\n#id${userId}`
     );
   }
-}
+});
 
-async function endScene(ctx) {
-  ctx.reply(
-    'Здравствуйте! Вы обратились в тех.поддержку проекта Champion Casino.\nПо какому вопросу вы обращаетесь?',
-    Markup.keyboard(botMenu).resize().oneTime(),
-  );
-
-  ctx.scene.leave();
-}
+module.exports = userAdminChatScene;
