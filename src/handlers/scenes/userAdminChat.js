@@ -25,7 +25,8 @@ userAdminChatScene.on('message', async (ctx) => {
   for (const operatorId of codeOperators) {
     await ctx.telegram.sendMessage(
         operatorId,
-        `Обращение по категории: ${ctx.session.supportCategory}\n\nСообщение от ${username}:\n\n${message}\n\n#id${userId}`
+        `Обращение по категории: ${ctx.session.supportCategory}\n\nОт пользователя @${username}:\nid: ${userId}\nСообщение:\n\n${message}`
+        /* `Обращение по категории: ${ctx.session.supportCategory}\n\nСообщение от @${username}:\n\n${message}\n\n#id${userId}` */
     );
   }
 });
