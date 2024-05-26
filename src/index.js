@@ -1,8 +1,8 @@
 const dotenv = require('dotenv');
-const { Telegraf } = require('telegraf');
+const { Telegraf, session } = require('telegraf');
 const registerHandler = require('./handlers/registerHandlers');
 const sessionMiddleware = require('./middlewares/sessionMiddleware');
-const { stage } = require('./handlers/scenes');
+const stage = require('./handlers/scenes');
 
 dotenv.config();
 
@@ -14,10 +14,10 @@ const token = process.env.BOT_TOKEN;
 const bot = new Telegraf(token);
 
 bot.use(sessionMiddleware);
+bot.use(session());
 bot.use(stage.middleware());
 registerHandler(bot);
 
-bot
-  .launch()
+bot.launch()
   .then(() => console.log('Bot started'))
   .catch((err) => console.error('Failed to launch bot', err));
