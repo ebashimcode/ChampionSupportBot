@@ -38,7 +38,33 @@ function userExists(userid) {
   });
 }
 
+function getUserCount() {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT COUNT(*) as count FROM users`;
+    db.get(query, (err, row) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(row.count);
+    });
+  });
+}
+
+function getAllUsers() {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT userid FROM users`;
+    db.all(query, (err, rows) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(rows);
+    });
+  });
+}
+
 module.exports = {
   addUser,
-  userExists
+  userExists,
+  getUserCount,
+  getAllUsers,
 };
