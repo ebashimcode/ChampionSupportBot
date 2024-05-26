@@ -11,7 +11,6 @@ module.exports = function supportHandler(bot) {
       const username = ctx.from.username || `User ${userId}`;
       const userMessage = ctx.message.text;
 
-
       const exists = await userExists(userId);
       if (!exists) {
         await addUser(username, userId);
