@@ -8,6 +8,10 @@ module.exports = (bot) => {
   bot.hears(/.*/, replyHandler);
   bot.command('support', supportHandler(bot));
 
+  bot.action(/reply_(\d+)/, (ctx => {
+    ctx.session.replyId = ctx.match[1];
+  }));
+
   bot.command('admin', (ctx) => {
     if (codeOperators.includes(ctx.from.id)) {
       ctx.scene.enter('ADMIN_PANEL_SCENE');
