@@ -1,5 +1,6 @@
 const { codeOperators } = require('../../const');
 const { addUser, userExists } = require('../../data/DB');
+const { Markup } = require('telegraf');
 
 module.exports = function supportHandler(bot) {
   registerHandlers(bot);
@@ -10,12 +11,11 @@ module.exports = function supportHandler(bot) {
       const username = ctx.from.username || `User ${userId}`;
       const userMessage = ctx.message.text;
 
-      // Сохраняем пользователя в базе данных
+
       const exists = await userExists(userId);
       if (!exists) {
         await addUser(username, userId);
       }
-
 
       for (const operatorId of codeOperators) {
         await ctx.telegram.sendMessage(operatorId, `Обращение по категории: ${ctx.session.supportCategory}\n\nСообщение от ${username}:\n\n${userMessage}\n\n#id${userId}`);
