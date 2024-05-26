@@ -1,11 +1,10 @@
 const { Scenes } = require('telegraf');
-
 const userAdminChatScene = require('./userAdminChat');
-const { scenes } = require('./scenes');
+const adminPanelScene = require('./adminPanelScene');
+const broadcastScene = require('./broadcastScene');
 
-const stage = new Scenes.Stage([userAdminChatScene]);
+const stage = new Scenes.Stage([userAdminChatScene, adminPanelScene, broadcastScene]);
 
 module.exports = {
-    scenes,
     stage,
 };
