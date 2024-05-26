@@ -50,6 +50,7 @@ function getUserCount() {
   });
 }
 
+// TO-DO: Need refactor
 function getAllUsers() {
   return new Promise((resolve, reject) => {
     const query = `SELECT userid FROM users`;
