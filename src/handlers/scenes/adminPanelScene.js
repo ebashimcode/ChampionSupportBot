@@ -1,6 +1,6 @@
 const { Scenes, Markup } = require('telegraf');
-const { getUserCount, getAllUsers } = require('../../data/DB');
-const { adminMenu, botMenu } = require('../../const');
+const { getUserCount } = require('../../data/DB');
+const { adminMenu } = require('../../const');
 
 const adminPanelScene = new Scenes.BaseScene('ADMIN_PANEL_SCENE');
 
@@ -24,7 +24,7 @@ adminPanelScene.hears('Создать рассылку 📢', async (ctx) => {
 adminPanelScene.hears('Назад 🔙', async (ctx) => {
     await ctx.reply(
         'Здравствуйте! Вы обратились в тех.поддержку проекта Champion Casino.\nПо какому вопросу вы обращаетесь?',
-        Markup.keyboard(botMenu).resize().oneTime()
+        Markup.keyboard(adminMenu).resize().oneTime()
     );
     ctx.scene.leave();
 });
