@@ -1,4 +1,4 @@
-const { codeOperators } = require('../../data/const');
+const { codeOperators } = require('../../const');
 
 module.exports = async function replyHandler(ctx, next) {
     if (!codeOperators.includes(ctx.from.id)) {

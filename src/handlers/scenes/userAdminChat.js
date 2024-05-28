@@ -26,8 +26,6 @@ userAdminChatScene.on('message', async (ctx) => {
     const userId = ctx.from.id;
     const username = ctx.from.username ? `@${ctx.from.username}` : `User ${userId}`;
 
-    console.log('Incoming message:', ctx.message);
-
     for (const operatorId of codeOperators) {
         try {
             await ctx.telegram.sendMessage(
