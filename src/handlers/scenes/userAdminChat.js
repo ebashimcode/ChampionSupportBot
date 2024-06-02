@@ -1,5 +1,6 @@
 const { Scenes, Markup } = require('telegraf');
 const { codeOperators, botMenu } = require('../../const');
+const getPlayerStats = require('../../data/getPlayerStats');
 
 const userAdminChatScene = new Scenes.BaseScene('USER_ADMIN_CHAT_SCENE');
 
@@ -28,9 +29,17 @@ userAdminChatScene.on('message', async (ctx) => {
 
     for (const operatorId of codeOperators) {
         try {
+            const emptyStats = {
+                "balance": '???',
+                "todayDeposit": '???',
+                "weekDeposit": '???',
+                "monthDeposit": '???',
+            };
+            const playerStats = (await getPlayerStats(userId)) || emptyStats;
+
             await ctx.telegram.sendMessage(
                 operatorId,
-                `Обращение по категории: ${ctx.session.supportCategory || 'Не указана'}\n\nОт пользователя ${username}:\nid: ${userId}\nСообщение:\n\n${message}`,
+                `Обращение по категории: ${ctx.session.supportCategory || 'Не указана'}\n\nОт пользователя ${username}:\nid: ${userId}\nСообщение:\n\n${message}.\n\nБаланс: ${playerStats.balance}\nВнесено сегодня: ${playerStats.todayDeposit}\nВнесено за неделю: ${playerStats.weekDeposit}\nВнесено за месяц: ${playerStats.monthDeposit}\n`,
                 Markup.inlineKeyboard([
                     Markup.button.callback('Ответить', `reply_${userId}`),
                     Markup.button.callback('Отменить', `cancel_${userId}`)
