@@ -6,14 +6,14 @@ const userAdminChatScene = new Scenes.BaseScene('USER_ADMIN_CHAT_SCENE');
 
 userAdminChatScene.enter(async (ctx) => {
     await ctx.reply(
-        '✉️ Напишите своё сообщение для технической поддержки.\nДля выхода из чата введите /quit'
+        '✉️ Напишите своё сообщение для технической поддержки.\nДля выхода из чата введите /quit',
     );
 });
 
 userAdminChatScene.hears(/\/quit/, async (ctx) => {
     await ctx.reply(
         'Здравствуйте! Вы обратились в тех.поддержку проекта Champion Casino.\nПо какому вопросу вы обращаетесь?',
-        Markup.keyboard(botMenu).resize().oneTime()
+        Markup.keyboard(botMenu).resize().oneTime(),
     );
     ctx.scene.leave();
 });
@@ -30,20 +30,26 @@ userAdminChatScene.on('message', async (ctx) => {
     for (const operatorId of codeOperators) {
         try {
             const emptyStats = {
-                "balance": '???',
-                "todayDeposit": '???',
-                "weekDeposit": '???',
-                "monthDeposit": '???',
+                balance: '???',
+                todayDeposit: '???',
+                weekDeposit: '???',
+                monthDeposit: '???',
             };
             const playerStats = (await getPlayerStats(userId)) || emptyStats;
 
             await ctx.telegram.sendMessage(
                 operatorId,
-                `Обращение по категории: ${ctx.session.supportCategory || 'Не указана'}\n\nОт пользователя ${username}:\nid: ${userId}\nСообщение:\n\n${message}.\n\nБаланс: ${playerStats.balance}\nВнесено сегодня: ${playerStats.todayDeposit}\nВнесено за неделю: ${playerStats.weekDeposit}\nВнесено за месяц: ${playerStats.monthDeposit}\n`,
+                `Обращение по категории: ${
+                    ctx.session.supportCategory || 'Не указана'
+                }\n\nОт пользователя ${username}:\nid: ${userId}\nСообщение:\n\n${message}.\n\nБаланс: ${
+                    playerStats.balance
+                }\nВнесено сегодня: ${playerStats.todayDeposit}\nВнесено за неделю: ${
+                    playerStats.weekDeposit
+                }\nВнесено за месяц: ${playerStats.monthDeposit}\n`,
                 Markup.inlineKeyboard([
                     Markup.button.callback('Ответить', `reply_${userId}`),
-                    Markup.button.callback('Отменить', `cancel_${userId}`)
-                ])
+                    Markup.button.callback('Отменить', `cancel_${userId}`),
+                ]),
             );
         } catch (error) {
             console.error(`Error sending message to operator ${operatorId}:`, error);
@@ -53,9 +59,9 @@ userAdminChatScene.on('message', async (ctx) => {
 
 userAdminChatScene.action(/reply_(\d+)/, async (ctx) => {
     const userId = ctx.match[1];
-    ctx.session.replyId = userId;  // Устанавливаем replyId в сессии
+    ctx.session.replyId = userId; // Устанавливаем replyId в сессии
     await ctx.reply(`Напишите ваш ответ пользователю с id: ${userId}`);
-    
+
     ctx.scene.state.replyingTo = userId;
     ctx.scene.enter('OPERATOR_REPLY_SCENE');
 });
