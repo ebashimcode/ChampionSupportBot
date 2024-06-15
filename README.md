@@ -27,7 +27,7 @@
     │   ├───agents
     │   │       replyHandler.js
     │   │
-    │   ├───commands
+    │   ├───admins
     │   │       startHandler.js
     │   │       supportHandler.js
     │   │
@@ -75,8 +75,8 @@ bot.launch()
 Обработчик
 
 ```javascript
-const startHandler = require('./commands/startHandler');
-const supportHandler = require('./commands/supportHandler');
+const startHandler = require('./admins/startHandler');
+const supportHandler = require('./admins/supportHandler');
 const replyHandler = require('./agents/replyHandler');
 const { codeOperators } = require('../const');
 

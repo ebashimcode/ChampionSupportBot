@@ -2,15 +2,15 @@ const { Scenes, Markup } = require('telegraf');
 const { codeOperators, botMenu } = require('../../const');
 const getPlayerStats = require('../../data/getPlayerStats');
 
-const userAdminChatScene = new Scenes.BaseScene('USER_ADMIN_CHAT_SCENE');
+const supportScene = new Scenes.BaseScene('SUPPORT_SCENE');
 
-userAdminChatScene.enter(async (ctx) => {
+supportScene.enter(async (ctx) => {
     await ctx.reply(
         '✉️ Напишите своё сообщение для технической поддержки.\nДля выхода из чата введите /quit',
     );
 });
 
-userAdminChatScene.hears(/\/quit/, async (ctx) => {
+supportScene.hears(/\/quit/, async (ctx) => {
     await ctx.reply(
         'Здравствуйте! Вы обратились в тех.поддержку проекта Champion Casino.\nПо какому вопросу вы обращаетесь?',
         Markup.keyboard(botMenu).resize().oneTime(),
@@ -18,7 +18,7 @@ userAdminChatScene.hears(/\/quit/, async (ctx) => {
     ctx.scene.leave();
 });
 
-userAdminChatScene.on('message', async (ctx) => {
+supportScene.on('message', async (ctx) => {
     const message = ctx.message.text;
     if (!message) {
         return ctx.reply('Сообщение не должно быть пустым.');
@@ -57,7 +57,7 @@ userAdminChatScene.on('message', async (ctx) => {
     }
 });
 
-userAdminChatScene.action(/reply_(\d+)/, async (ctx) => {
+supportScene.action(/reply_(\d+)/, async (ctx) => {
     const userId = ctx.match[1];
     ctx.session.replyId = userId; // Устанавливаем replyId в сессии
     await ctx.reply(`Напишите ваш ответ пользователю с id: ${userId}`);
@@ -66,11 +66,11 @@ userAdminChatScene.action(/reply_(\d+)/, async (ctx) => {
     ctx.scene.enter('OPERATOR_REPLY_SCENE');
 });
 
-userAdminChatScene.action(/cancel_(\d+)/, async (ctx) => {
+supportScene.action(/cancel_(\d+)/, async (ctx) => {
     const userId = ctx.match[1];
     await ctx.reply(`Вы отменили ответ пользователю с id: ${userId}`);
 });
 
 module.exports = {
-    userAdminChatScene,
+    supportScene,
 };

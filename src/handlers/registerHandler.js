@@ -14,7 +14,7 @@ module.exports = (bot) => {
 
   bot.command('admin', (ctx) => {
     if (codeOperators.includes(ctx.from.id)) {
-      ctx.scene.enter('ADMIN_PANEL_SCENE');
+      ctx.scene.enter('ADMIN_MENU_SCENE');
     } else {
       ctx.reply('У вас нет доступа к этой команде.');
     }

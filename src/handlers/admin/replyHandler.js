@@ -1,7 +1,7 @@
-const { codeOperators } = require('../../const');
+const { codeAdmin } = require('../../const');
 
 module.exports = async function replyHandler(ctx, next) {
-    if (!codeOperators.includes(ctx.from.id)) {
+    if (!codeAdmin.includes(ctx.from.id)) {
         return next();
     }
 
@@ -14,7 +14,7 @@ module.exports = async function replyHandler(ctx, next) {
     }
 
     try {
-        await ctx.telegram.sendMessage(destId, `Сообщение от оператора:\n\n${messageText}`);
+        await ctx.telegram.sendMessage(destId, `Вам пришло сообщение от оператора:\n\n${messageText}`);
     } catch (error) {
         console.error('Error sending message:', error);
         ctx.reply('Произошла ошибка при отправке сообщения.');

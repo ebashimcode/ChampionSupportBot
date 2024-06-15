@@ -1,5 +1,5 @@
 const { Scenes } = require('telegraf');
-const { getAllUsers } = require('../../data/DB');
+const { getAllUsers } = require('../../../data/DB');
 
 const broadcastScene = new Scenes.BaseScene('BROADCAST_SCENE');
 
@@ -13,7 +13,7 @@ broadcastScene.on('message', async (ctx) => {
 
     await ctx.reply('Сообщение было отправлено всем пользователям.');
     ctx.scene.leave();
-    ctx.scene.enter('ADMIN_PANEL_SCENE');
+    ctx.scene.enter('ADMIN_MENU_SCENE');
 });
 
 module.exports = broadcastScene;
